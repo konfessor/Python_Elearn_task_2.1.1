@@ -1,15 +1,6 @@
-currency_to_rub = {
-    "AZN": 35.68,
-    "BYR": 23.91,
-    "EUR": 59.90,
-    "GEL": 21.74,
-    "KGS": 0.76,
-    "KZT": 0.13,
-    "RUR": 1,
-    "UAH": 1.64,
-    "USD": 60.66,
-    "UZS": 0.0055,
-}
+from data_set import DataSet
+from input_conect import InputConect
+from report import Report
 
 print("Введите название файла: ", end="")
 file_name = input()
@@ -29,5 +20,12 @@ else:
     salary_by_city = result.get_salary_by_city()
     vacancies_by_city = result.get_vacancies_by_city()
 
+    print(f"Динамика уровня зарплат по годам: {salary_by_year}")
+    print(f"Динамика количества вакансий по годам: {vacancies_by_year}")
+    print(f"Динамика уровня зарплат по годам для выбранной профессии: {salary_by_year_for_profession}")
+    print(f"Динамика количества вакансий по годам для выбранной профессии: {vacancies_by_year_for_profession}")
+    print(f"Уровень зарплат по городам (в порядке убывания): {salary_by_city}")
+    print(f"Доля вакансий по городам (в порядке убывания): {vacancies_by_city}")
+
     Report(salary_by_year, vacancies_by_year, salary_by_year_for_profession,
-           vacancies_by_year_for_profession, salary_by_city, vacancies_by_city).generate_excel()
+           vacancies_by_year_for_profession, salary_by_city, vacancies_by_city, profession_name).generate_excel()
