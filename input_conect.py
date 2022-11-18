@@ -103,3 +103,16 @@ class InputConect:
                 vacancies_by_city[city] = round(self.__vacancies_by_city[city] / self.__vacancies_amount, 4)
         vacancies_by_city = dict(sorted(vacancies_by_city.items(), key=lambda item: item[1], reverse=True))
         return dict(zip(list(vacancies_by_city.keys())[:10], list(vacancies_by_city.values())[:10]))
+
+currency_to_rub = {
+    "AZN": 35.68,
+    "BYR": 23.91,
+    "EUR": 59.90,
+    "GEL": 21.74,
+    "KGS": 0.76,
+    "KZT": 0.13,
+    "RUR": 1,
+    "UAH": 1.64,
+    "USD": 60.66,
+    "UZS": 0.0055,
+}
