@@ -3,23 +3,24 @@ from openpyxl.styles import Side, Border, Font
 
 class Report:
     def __init__(self, salary_by_year: dict, vacancies_by_year: dict, salary_by_year_for_profession: dict,
-                 vacancies_by_year_for_profession: dict, salary_by_city: dict, vacancies_by_city: dict):
+                 vacancies_by_year_for_profession: dict, salary_by_city: dict, vacancies_by_city: dict, profession_name: str):
         self.__salary_by_year = salary_by_year
         self.__vacancies_by_year = vacancies_by_year
         self.__salary_by_year_for_profession = salary_by_year_for_profession
         self.__vacancies_by_year_for_profession = vacancies_by_year_for_profession
         self.__salary_by_city = salary_by_city
         self.__vacancies_by_city = vacancies_by_city
+        self.__profession_name = profession_name
 
     def generate_excel(self):
         book = openpyxl.Workbook()
         book.remove(book["Sheet"])
         book.create_sheet("Статистика по годам")
         years = [2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022]
-        title1 = ["Год", "Средняя зарплата", f"Средняя зарплата - {profession_name}", "Количество вакансий", f"Количество вакансий - {profession_name}"]
+        title1 = ["Год", "Средняя зарплата", f"Средняя зарплата - {self.__profession_name}", "Количество вакансий", f"Количество вакансий - {self.__profession_name}"]
         book.worksheets[0].append(title1)
         for year in years:
-            if (year in salary_by_year.keys()):
+            if (year in self.__salary_by_year.keys()):
                 book.worksheets[0].append([year,
                                            self.__salary_by_year[year],
                                            self.__salary_by_year_for_profession[year],
@@ -36,7 +37,7 @@ class Report:
             top = side,
             bottom = side
         )
-        for i in range(len(salary_by_year.keys()) + 1):
+        for i in range(len(self.__salary_by_year.keys()) + 1):
             for j in range(len(title1)):
                     book.worksheets[0].cell(i + 1, j + 1).border = border
 
