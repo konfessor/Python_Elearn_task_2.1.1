@@ -1,4 +1,6 @@
 import csv
+from vacancy import Vacancy
+
 
 class DataSet:
     def __init__(self, file_name: str):
