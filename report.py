@@ -1,5 +1,8 @@
 import openpyxl
+import re
 from openpyxl.styles import Side, Border, Font
+import matplotlib.pyplot as plt
+import numpy as np
 
 class Report:
     def __init__(self, salary_by_year: dict, vacancies_by_year: dict, salary_by_year_for_profession: dict,
@@ -80,3 +83,63 @@ class Report:
             book.worksheets[1].column_dimensions[col].width = value
 
         book.save("report.xlsx")
+
+    def generate_image(self):
+        figure, ax = plt.subplots(2, 2)
+
+        width = 0.35
+
+        # 1 график
+        labels = list(self.__salary_by_year.keys())
+        x = np.arange(len(labels))
+        ax[0, 0].bar(x - width / 2, self.__salary_by_year.values(), width, label="средняя з/п")
+        ax[0, 0].bar(x + width / 2, self.__salary_by_year_for_profession.values(), width,
+                     label=f"з/п {self.__profession_name}")
+
+        ax[0, 0].set_title("Уровень зарплат по годам")
+        ax[0, 0].set_xticks(x, labels)
+        ax[0, 0].legend(fontsize=8)
+        ax[0, 0].set_xticklabels(labels, rotation=90)
+        for label in (ax[0, 0].get_xticklabels() + ax[0, 0].get_yticklabels()):
+            label.set_fontsize(8)
+        ax[0, 0].grid(axis="y")
+
+        # 2 график
+        labels = list(self.__vacancies_by_year.keys())
+        x = np.arange(len(labels))
+        ax[0, 1].bar(x - width / 2, self.__vacancies_by_year.values(), width, label="Количество вакансий")
+        ax[0, 1].bar(x + width / 2, self.__vacancies_by_year_for_profession.values(), width,
+                     label=f"Количество вакансий\n{self.__profession_name}")
+
+        ax[0, 1].set_title("Количество вакансий по годам")
+        ax[0, 1].set_xticks(x, labels)
+        ax[0, 1].legend(loc="upper left", fontsize=8)
+        ax[0, 1].set_xticklabels(labels, rotation=90)
+        for label in (ax[0, 1].get_xticklabels() + ax[0, 1].get_yticklabels()):
+            label.set_fontsize(8)
+        ax[0, 1].grid(axis="y")
+
+        # 3 график
+        labels = []
+        for city in list(reversed(self.__salary_by_city.keys())):
+            labels.append("\n".join(re.split(r"[ -]", city)))
+        x = np.arange(len(labels))
+        ax[1, 0].barh(x - width / 2, list(reversed(self.__salary_by_city.values())), width)
+
+        ax[1, 0].set_title("Уровень зарплат по городам")
+        for label in (ax[1, 0].get_xticklabels() + ax[1, 0].get_yticklabels()):
+            label.set_fontsize(8)
+        ax[1, 0].set_yticks(x, labels, fontsize=6, horizontalalignment="right", verticalalignment="center")
+        ax[1, 0].grid(axis="x")
+
+        # 4 график
+        self.__vacancies_by_city["Другое"] = 1 - sum(self.__vacancies_by_city.values())
+        labels = list(self.__vacancies_by_city.keys())
+        ax[1, 1].pie(self.__vacancies_by_city.values(), labels=labels, startangle=90, textprops={"fontsize": 6})
+        ax[1, 1].set_title("Доля выкансий по городам")
+        ax[1, 1].axis("equal")
+        for label in (ax[1, 1].get_label()):
+            label.set_fontsize(6)
+
+        plt.tight_layout()
+        plt.savefig("graph.png")
