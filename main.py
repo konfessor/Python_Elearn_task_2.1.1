@@ -27,5 +27,8 @@ else:
     print(f"Уровень зарплат по городам (в порядке убывания): {salary_by_city}")
     print(f"Доля вакансий по городам (в порядке убывания): {vacancies_by_city}")
 
-    Report(salary_by_year, vacancies_by_year, salary_by_year_for_profession,
-           vacancies_by_year_for_profession, salary_by_city, vacancies_by_city, profession_name).generate_excel()
+    report = Report(salary_by_year, vacancies_by_year, salary_by_year_for_profession,
+                    vacancies_by_year_for_profession, salary_by_city, vacancies_by_city, profession_name)
+    report.generate_excel()
+    report.generate_image()
+    report.generate_pdf()
